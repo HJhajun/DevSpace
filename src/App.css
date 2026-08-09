@@ -1,0 +1,392 @@
+/* App.css */
+
+/* =========================================
+   1. CSS Variables (테마 컬러 및 기본 설정)
+========================================= */
+:root {
+  --bg-workspace: #18181b; /* 제일 어두운 배경 */
+  --bg-sidebar: #27272a;   /* 채널, 멤버 목록 배경 */
+  --bg-chat: #1f1f22;      /* 메인 채팅창 배경 */
+  --bg-hover: #3f3f46;
+  --bg-input: #27272a;
+  
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  
+  --accent-color: #6366f1; /* 세련된 인디고 블루 */
+  --accent-hover: #4f46e5;
+  
+  --border-color: #3f3f46;
+  --border-radius: 8px;
+  
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* =========================================
+   2. Reset & Global
+========================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-workspace);
+  color: var(--text-primary);
+  overflow: hidden; /* 전체 페이지 스크롤 방지 */
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+}
+
+/* =========================================
+   3. Layout (App Shell)
+========================================= */
+.app-shell {
+  display: grid;
+  /* 워크스페이스(70px) + 채널(240px) + 채팅창(나머지) + 상태창(240px) */
+  grid-template-columns: 70px 240px 1fr 240px;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* 스크롤바 커스텀 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+/* 공통 사이드바 패널 스타일 */
+aside {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+}
+.status-pane {
+  border-right: none;
+  border-left: 1px solid var(--border-color);
+}
+
+/* 패널 타이틀 */
+.pane-title {
+  padding: 20px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.system-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 0 16px;
+}
+
+/* =========================================
+   4. Workspace Pane
+========================================= */
+.workspace-pane {
+  background-color: var(--bg-workspace);
+  align-items: center;
+}
+
+.workspace-pane .pane-title {
+  display: none; /* 워크스페이스는 아이콘만 보이므로 타이틀 숨김 */
+}
+
+.workspace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
+  width: 100%;
+  align-items: center;
+}
+
+.workspace-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: var(--bg-sidebar);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.workspace-icon:hover {
+  background-color: var(--bg-hover);
+  border-radius: 8px; /* 호버 시 약간 덜 둥글게 */
+}
+
+.workspace-icon.active {
+  background-color: var(--accent-color);
+  border-radius: 8px;
+  color: #fff;
+}
+
+/* =========================================
+   5. Channel Pane
+========================================= */
+.channel-pane {
+  background-color: var(--bg-sidebar);
+}
+
+.channel-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.channel-pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: background-color 0.15s ease;
+}
+
+.channel-pill:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.channel-pill.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.channel-pill small {
+  font-size: 11px;
+  color: var(--text-muted);
+  background-color: var(--bg-workspace);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* =========================================
+   6. Main Chat Pane
+========================================= */
+.chat-pane {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-chat);
+  position: relative;
+}
+
+.chat-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.chat-header .eyebrow {
+  font-size: 12px;
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.chat-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* 채팅 스트림 (메시지 영역) */
+.chat-stream {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.message-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.message-meta strong {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.message-meta span {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.message-card p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* 코드 블록 스타일 */
+.message-card.code pre {
+  background-color: var(--bg-workspace);
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+  font-size: 13px;
+  color: #e4e4e7;
+  overflow-x: auto;
+  line-height: 1.4;
+}
+
+/* 입력창 (Composer) */
+.composer {
+  padding: 20px 24px;
+}
+
+.composer input {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 14px 16px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.composer input:focus {
+  border-color: var(--accent-color);
+}
+
+.composer input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   7. Status Pane (오른쪽 멤버 목록)
+========================================= */
+.status-pane {
+  background-color: var(--bg-sidebar);
+}
+
+.member-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.member-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.member-card strong {
+  font-size: 13px;
+  color: var(--text-primary);
+  display: block;
+}
+
+.member-card p {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.status-pill {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  background-color: rgba(34, 197, 94, 0.15); /* Greenish */
+  color: #4ade80;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* =========================================
+   8. Components (Buttons & Mini Cards)
+========================================= */
+.primary-btn {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.primary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mini-card {
+  margin: 16px;
+  padding: 16px;
+  background-color: var(--bg-workspace);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.mini-card h4 {
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.mini-card p {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.mini-card.alt {
+  background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, transparent 100%);
+  border-color: rgba(99, 102, 241, 0.2);
+}
