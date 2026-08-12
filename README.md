@@ -1,5 +1,13 @@
 # DevSpace
 
+DevSpace는 실시간 메시징과 협업 워크스페이스를 지원하는 React 기반 앱입니다. 사용자는 워크스페이스 내 채널을 선택하고 메시지를 주고받으며, 코드 블록을 포함한 협업 커뮤니케이션을 처리할 수 있습니다.
+
 ---
 
-메신저 + 협업 IDE 앱 개발
+## 기술 스택
+
+- React 19
+- Vite
+- Supabase
+- React Router DOM
+- ESLint
