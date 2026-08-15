@@ -3,17 +3,14 @@
   <defs>
     <style>
       .cls-1 {
-        fill: none;
-        stroke: #3b82f6;
-        stroke-miterlimit: 10;
-        stroke-width: 6px;
+        fill: #3b82f6;
       }
     </style>
   </defs>
   <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
   <g>
     <g id="_레이어_1" data-name="레이어_1">
-      <path class="cls-1" d="M24,40c-4.7,0-8.5-3.8-8.5-8.5s3.8-8.5,8.5-8.5,8.5,3.8,8.5,8.5V6"/>
+      <path class="cls-1" d="M24,41c-5.8,0-10.5-4.7-10.5-10.5s4.7-10.5,10.5-10.5,4.7.8,6.5,2.3V5h4v25.6h-4c0-3.6-2.9-6.5-6.5-6.5s-6.5,2.9-6.5,6.5,2.9,6.5,6.5,6.5v4Z"/>
     </g>
   </g>
 </svg>
