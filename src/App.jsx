@@ -9,8 +9,8 @@ function App() {
   const [channels, setChannels] = useState([])
   const [messages, setMessages] = useState([])
   
-  const [activeWorkspace, setActiveWorkspace] = useState(null)
-  const [activeChannel, setActiveChannel] = useState(null)
+  const [selectedWorkspace, setSelectedWorkspace] = useState(null)
+  const [selectedChannel, setSelectedChannel] = useState(null)
   
   const [loading, setLoading] = useState(true) // 처음엔 무조건 로딩 중이므로 true로 시작
   const [messagesLoading, setMessagesLoading] = useState(false)
@@ -45,12 +45,7 @@ function App() {
     fetchInitialData()
   }, [])
 
-  // 2. 초기 워크스페이스 세팅
-  useEffect(() => {
-    if (!activeWorkspace && workspaces.length > 0) {
-      setActiveWorkspace(workspaces[0].id)
-    }
-  }, [workspaces, activeWorkspace])
+  const activeWorkspace = selectedWorkspace || workspaces[0]?.id || null
 
   // 현재 워크스페이스에 속한 채널 목록
   const workspaceChannels = useMemo(
@@ -58,23 +53,18 @@ function App() {
     [channels, activeWorkspace]
   )
 
-  // 3. 워크스페이스 변경 시 채널 자동 선택
-  useEffect(() => {
-    if (activeWorkspace && workspaceChannels.length > 0) {
-      const isChannelInWorkspace = workspaceChannels.some(c => c.id === activeChannel)
-      if (!isChannelInWorkspace) {
-        setActiveChannel(workspaceChannels[0].id)
-      }
-    } else if (workspaceChannels.length === 0) {
-      // 해당 워크스페이스에 채널이 아예 없으면 선택 해제
-      setActiveChannel(null)
-    }
-  }, [activeWorkspace, workspaceChannels, activeChannel])
+  const activeChannel = useMemo(() => {
+    const selectedChannelExists = workspaceChannels.some(
+      (channel) => channel.id === selectedChannel,
+    )
+
+    if (selectedChannelExists) return selectedChannel
+    return workspaceChannels[0]?.id || null
+  }, [workspaceChannels, selectedChannel])
 
   // 4. 메시지 로딩
   useEffect(() => {
     if (!activeChannel) {
-      setMessages([])
       return
     }
 
@@ -170,7 +160,10 @@ function App() {
               <button
                 key={workspace.id}
                 className={`workspace-icon ${activeWorkspace === workspace.id ? 'active' : ''}`}
-                onClick={() => setActiveWorkspace(workspace.id)}
+                onClick={() => {
+                  setSelectedWorkspace(workspace.id)
+                  setSelectedChannel(null)
+                }}
                 title={workspace.name}
               >
                 {workspace.icon_name || workspace.name.slice(0, 2).toUpperCase()}
@@ -193,7 +186,7 @@ function App() {
               <button
                 key={channel.id}
                 className={`channel-pill ${activeChannel === channel.id ? 'active' : ''}`}
-                onClick={() => setActiveChannel(channel.id)}
+                onClick={() => setSelectedChannel(channel.id)}
               >
                 <span>{channel.name}</span>
                 <small>{channel.type}</small>
