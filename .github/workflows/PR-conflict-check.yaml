@@ -2,6 +2,8 @@ name: PR Conflict Check
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  pull_request_review:
+    types: [submitted, dismissed]
 
 jobs:
   check-conflict:
@@ -16,15 +18,26 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = context.payload.pull_request ? context.payload.pull_request.number : context.payload.review.pull_request.number;
             const repo = context.repo;
             const { data: pr } = await github.rest.pulls.get({
               owner: repo.owner,
               repo: repo.repo,
               pull_number: prNumber,
             });
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: repo.owner,
+              repo: repo.repo,
+              pull_number: prNumber,
+            });
+            const isApproved = reviews.some(r => r.state === 'APPROVED');
 
-            console.log(`PR Mergeable 상태: ${pr.mergeable_state}`);
+            console.log(`PR Mergeable 상태: ${pr.mergeable_state}, 승인 여부: ${isApproved}`);
+            if (isApproved) {
+              console.log("승인이 확인되어 충돌이 있어도 병합을 허용합니다.");
+              return;
+            }
+
             if (pr.mergeable === false || pr.mergeable_state === 'dirty') {
               core.setFailed("이 PR에 충돌이 있습니다. 코드를 확인해주세요.");
             } else if (pr.mergeable === null) {
